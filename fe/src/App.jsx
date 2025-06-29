@@ -1,12 +1,15 @@
-import React from 'react'
-import Details from './components/Details'
+import React, { Suspense} from 'react';
+
+const LazyDetails = React.lazy(() => import('./components/Details'))
 
 function App() {
 
   return (
   
     <>
-      <Details />
+    <Suspense fallback={<h3>Loading hotels....</h3>}>
+      <LazyDetails />
+    </Suspense>
     </>
   )
 }

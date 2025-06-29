@@ -21,7 +21,7 @@ async function searchHotels(req,res){
         res.status(200).send(allData)
         
     } catch (error) {
-        console.log("Error is =>", error.message)
+        res.status(500).json({ message: 'Something went wrong' });
     }
 }
 
