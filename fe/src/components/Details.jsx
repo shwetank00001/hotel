@@ -1,29 +1,14 @@
-import React, {useEffect, useState} from 'react'
-import Axios from 'axios'
-import './details.css'
+import React, {useEffect, useState, Suspense} from 'react'
+import {ErrorBoundary, useErrorBoundary} from 'react-error-boundary'
+const LazyHotel = React.lazy(() => import('./Hotels'));
+
 
 export default function Details(){
+    const [searchData, setSearchData ] = useState([])
 
     const [city, setCity] = useState('');
-
-    const [searchData, setSearchData ] = useState([])
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
-
-    const [fetchedData, setFetchedData] = useState([[], []]);
-
-
-    const url = "http://localhost:5000/api/search-hotels";
-
-    useEffect(()=> {
-        async function showHotels(){
-            const response = await Axios.get(url);
-            console.log("response", response.data);
-            setFetchedData(response.data)
-        }
-
-        showHotels();
-    }, [])
 
     function handleSubmit(e){
         e.preventDefault();
@@ -37,26 +22,22 @@ export default function Details(){
             ]
         });
         console.log(searchData);
-        console.log("Fetched Data is", fetchedData)
 
     }
 
-    let suppAList = fetchedData[0]?.map((item) => {
+    const { resetBoundary } = useErrorBoundary();
+    function showError({error}){
+
+
         return (
             <div>
-                <h3>{item.name}</h3>
-                <h5>{item.price}</h5>
+                <h1>Something went wrong!</h1>
+                <p>The error is:- {error.message}</p>
+                <button onClick={resetBoundary}>Try again</button>
             </div>
         )
-    })
-    let suppBList = fetchedData[1]?.map((item) => {
-        return (
-            <div>
-                <h3>{item.name}</h3>
-                <h5>{item.price}</h5>
-            </div>
-        )
-    })
+    }
+
 
     console.log(searchData)
     return (
@@ -67,17 +48,11 @@ export default function Details(){
                 <input placeholder='enter city name.' type='date' value={checkOut} onChange={(e) => setCheckOut(e.target.value)}  />
                 <button type='submit'>Search</button>
             </form>
-            <div className='hotelGrid'>
-                <div>
-                    <h1>Supplier A hotels</h1>
-                    {suppAList}
-                </div>
-                <div>
-                    <h1>Supplier B hotels</h1>
-                    {suppBList}
-                </div>
-            </div>
-
+            <ErrorBoundary fallbackRender={showError}>
+                <Suspense fallback={<p>Loading hotel Data..</p>}>
+                    <LazyHotel />
+                </Suspense>
+            </ErrorBoundary>
         </div>
     )
 }
