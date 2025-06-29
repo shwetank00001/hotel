@@ -1,15 +1,12 @@
 const mongoose = require('mongoose')
 
 const supplierBModel = new mongoose.Schema({
-    cityName:String,
-    checkIn:{
-        type:Date,
-        default:new Date()
+    hotelId: {
+        type: Number,
+        default: () => new Date().getTime()
     },
-    checkOut:{
-        type:Date,
-        default:new Date()
-    },
+    name:String,
+    price: Number       
 })
 
 module.exports = mongoose.model("SupplierB", supplierBModel)
