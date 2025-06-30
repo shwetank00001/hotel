@@ -10,25 +10,16 @@ export default function Details(){
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
 
+    const [showSearched, setShow] = useState(false)
+
     function handleSubmit(e){
         e.preventDefault();
-        setSearchData(function(item){
-            return [...item,
-                {
-                    cityName: city,
-                    checkInDate: checkIn,
-                    checkOutDate:  checkOut
-                }
-            ]
-        });
-        console.log(searchData);
-
+        setShow(true);
+        alert(`You searched for the city :${city} and your checkin date is: ${checkIn} and checkout is: ${checkOut}`);
     }
 
     const { resetBoundary } = useErrorBoundary();
     function showError({error}){
-
-
         return (
             <div>
                 <h1>Something went wrong!</h1>
@@ -38,8 +29,11 @@ export default function Details(){
         )
     }
 
+    // function resetAll(){
+    //     setCity();
+    //     setShow(false)
+    // }
 
-    console.log(searchData)
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -47,10 +41,11 @@ export default function Details(){
                 <input placeholder='enter city name.' type='date' value={checkIn} onChange={(e) => setCheckIn(e.target.value)}  />
                 <input placeholder='enter city name.' type='date' value={checkOut} onChange={(e) => setCheckOut(e.target.value)}  />
                 <button type='submit'>Search</button>
+                {/* <button onClick={resetAll}>Reset</button> */}
             </form>
             <ErrorBoundary fallbackRender={showError}>
                 <Suspense fallback={<p>Loading hotel Data..</p>}>
-                    <LazyHotel />
+                    <LazyHotel cityProp = {city} checkIn={checkIn} checkOut={checkOut} showSearched= {showSearched} />
                 </Suspense>
             </ErrorBoundary>
         </div>
