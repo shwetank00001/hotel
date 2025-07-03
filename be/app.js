@@ -7,6 +7,8 @@ require('./db/connect');
 
 const suppA = require('./routes/supplierARoute');
 const suppB = require('./routes/supplierBRoute');
+const apiRoutes = require('./routes/api');
+app.use('/api', apiRoutes);
 
 const searchHotels = require('./routes/searchHotelRoute')
 
